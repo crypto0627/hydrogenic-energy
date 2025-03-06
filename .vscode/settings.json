@@ -1,0 +1,14 @@
+{
+  "eslint.workingDirectories": ["./apps/backend", "./apps/frontend"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "eslint.validate": ["javascript", "typescript", "vue", "yaml", "dockerfile"],
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.useFlatConfig": true,
+  "eslint.options": {
+    "overrideConfigFile": "node_modules/jakelint/eslint.config.js"
+  }
+}
