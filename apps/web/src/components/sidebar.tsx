@@ -1,5 +1,4 @@
 'use client'
-
 import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, User, Weight } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'

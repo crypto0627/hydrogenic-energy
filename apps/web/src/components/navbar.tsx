@@ -1,9 +1,7 @@
 'use client'
-
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 
- 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
