@@ -34,5 +34,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Install dev dependencies
+        run: pnpm install --prod=false
+
       - name: Build
         run: pnpm build
