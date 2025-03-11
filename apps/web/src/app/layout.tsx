@@ -1,7 +1,7 @@
-import Navbar from '@/components/navbar'
-import Sidebar from '@/components/sidebar'
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
+import Navbar from '../components/navbar'
+import Sidebar from '../components/sidebar'
 import './globals.css'
 
 const geistSans = localFont({
