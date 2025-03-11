@@ -13,16 +13,16 @@ export default function Sidebar() {
     {
       id: 'dashboard',
       icon: LayoutDashboard,
-      link: '/dashboard',
+      link: '/',
     },
     {
       id: 'calculator',
       icon: Calculator,
       hasSubmenu: true,
       submenu: [
+        { id: 'pressure', icon: Gauge, link: '/pressure' },
         { id: 'flowrate', icon: Activity, link: '/flowrate' },
-        { id: 'massflow', icon: Weight, link: '/massflow' },
-        { id: 'pressure', icon: Gauge, link: '/pressure' }
+        { id: 'massflow', icon: Weight, link: '/massflow' }
       ],
     },
     {
