@@ -409,7 +409,7 @@ export default function MassFlowPage() {
       {/* 計算類型切換 */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2 text-white">計算類型</h2>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleCalculationTypeChange('ideal')}
             className={`px-4 py-2 rounded ${calculationType === 'ideal' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
@@ -428,7 +428,7 @@ export default function MassFlowPage() {
       {/* 氣體類型切換 */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2 text-white">氣體類型</h2>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleGasTypeChange('oxygen')}
             className={`px-4 py-2 rounded ${gasType === 'oxygen' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
@@ -469,55 +469,52 @@ export default function MassFlowPage() {
       {/* 流量換算表格 */}
       <div className="bg-zinc-800 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-white">體積流量</h2>
-        <div className="grid grid-cols-5 gap-2">
-          <div className="p-2"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="text-white font-semibold">公升 (L)</div>
           {Object.entries(timeUnitLabels).map(([key, label]) => (
-            <div key={key} className="p-2 text-center text-white font-semibold">{label}</div>
+            <div key={key} className="flex flex-col">
+              <span className="text-white text-sm mb-1">{label}</span>
+              {renderInputField(`literPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+            </div>
           ))}
-          
-          <div className="p-2 text-white font-semibold">公升 (L)</div>
-          {renderInputField('literPerSecond', '')}
-          {renderInputField('literPerMinute', '')}
-          {renderInputField('literPerHour', '')}
-          {renderInputField('literPerDay', '')}
         </div>
       </div>
       
       <div className="bg-zinc-800 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-white">質量流量</h2>
-        <div className="grid grid-cols-5 gap-2">
-          <div className="p-2"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="text-white font-semibold">公斤 (kg)</div>
           {Object.entries(timeUnitLabels).map(([key, label]) => (
-            <div key={key} className="p-2 text-center text-white font-semibold">{label}</div>
+            <div key={key} className="flex flex-col">
+              <span className="text-white text-sm mb-1">{label}</span>
+              {renderInputField(`kgPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+            </div>
           ))}
-          
-          <div className="p-2 text-white font-semibold">公斤 (kg)</div>
-          {renderInputField('kgPerSecond', '')}
-          {renderInputField('kgPerMinute', '')}
-          {renderInputField('kgPerHour', '')}
-          {renderInputField('kgPerDay', '')}
         </div>
       </div>
       
       <div className="bg-zinc-800 p-4 rounded-lg">
         <h2 className="text-xl font-semibold mb-4 text-white">化學流量</h2>
-        <div className="grid grid-cols-5 gap-2">
-          <div className="p-2"></div>
-          {Object.entries(timeUnitLabels).map(([key, label]) => (
-            <div key={key} className="p-2 text-center text-white font-semibold">{label}</div>
-          ))}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="text-white font-semibold">摩爾 (mol)</div>
+            {Object.entries(timeUnitLabels).map(([key, label]) => (
+              <div key={key} className="flex flex-col">
+                <span className="text-white text-sm mb-1">{label}</span>
+                {renderInputField(`molPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              </div>
+            ))}
+          </div>
           
-          <div className="p-2 text-white font-semibold">摩爾 (mol)</div>
-          {renderInputField('molPerSecond', '')}
-          {renderInputField('molPerMinute', '')}
-          {renderInputField('molPerHour', '')}
-          {renderInputField('molPerDay', '')}
-          
-          <div className="p-2 text-white font-semibold">分子數</div>
-          {renderInputField('moleculesPerSecond', '')}
-          {renderInputField('moleculesPerMinute', '')}
-          {renderInputField('moleculesPerHour', '')}
-          {renderInputField('moleculesPerDay', '')}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="text-white font-semibold">分子數</div>
+            {Object.entries(timeUnitLabels).map(([key, label]) => (
+              <div key={key} className="flex flex-col">
+                <span className="text-white text-sm mb-1">{label}</span>
+                {renderInputField(`moleculesPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
