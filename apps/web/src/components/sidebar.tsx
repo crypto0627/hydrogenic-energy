@@ -1,5 +1,5 @@
 'use client'
-import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, User, Weight } from 'lucide-react'
+import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, Weight } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
@@ -23,16 +23,6 @@ export default function Sidebar() {
         { id: 'flowrate', icon: Activity, link: '/flowrate' },
         { id: 'massflow', icon: Weight, link: '/massflow' }
       ],
-    },
-    {
-      id: 'profile',
-      icon: User,
-      link: '/profile',
-    },
-    {
-      id: 'settings',
-      icon: Settings,
-      link: '/settings', 
     },
     {
       id: 'logout',

@@ -1,4 +1,5 @@
-import withPWA from 'next-pwa';
+import withPWA from '@ducanh2912/next-pwa';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
@@ -6,11 +7,20 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
+  compress: true
 }
 
 export default withPWA({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-  register: true,
-  skipWaiting: true,
+  dest: "public",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  swcMinify: true,
+  disable: process.env.NODE_ENV === "development",
+  fallbacks: {
+    document: "/offline",
+  },
+  workboxOptions: {
+    disableDevLogs: true,
+  },
 })(nextConfig)
