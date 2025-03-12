@@ -8,23 +8,23 @@ export type ConditionType = 'oldSTP' | 'newSTP' | 'NTP' | 'normal';
 
 export interface FlowValues {
   // 體積流量
-  [key: string]: string;
-  literPerSecond: string;
-  literPerMinute: string;
-  literPerHour: string;
-  literPerDay: string;
-  cubicMeterPerSecond: string;
-  cubicMeterPerMinute: string;
-  cubicMeterPerHour: string;
-  cubicMeterPerDay: string;
+  [key: string]: string
+  literPerSecond: string
+  literPerMinute: string
+  literPerHour: string
+  literPerDay: string
+  cubicMeterPerSecond: string
+  cubicMeterPerMinute: string
+  cubicMeterPerHour: string
+  cubicMeterPerDay: string
   // 質量流量
-  kgPerSecond: string;
-  kgPerMinute: string;
-  kgPerHour: string;
-  kgPerDay: string;
+  kgPerSecond: string
+  kgPerMinute: string
+  kgPerHour: string
+  kgPerDay: string
   // 化學流量
-  molPerSecond: string;
-  molPerMinute: string;
-  molPerHour: string;
-  molPerDay: string;
+  molPerSecond: string
+  molPerMinute: string
+  molPerHour: string
+  molPerDay: string
 }

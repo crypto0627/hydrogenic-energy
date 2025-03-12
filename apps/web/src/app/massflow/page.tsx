@@ -318,13 +318,7 @@ export default function MassFlowPage() {
             onClick={() => handleConditionTypeChange('oldSTP')}
             className={`px-4 py-2 rounded ${conditionType === 'oldSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
           >
-            STP : ISO 10780
-          </button>
-          <button
-            onClick={() => handleConditionTypeChange('newSTP')}
-            className={`px-4 py-2 rounded ${conditionType === 'newSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
-          >
-            STP：IUPAC
+            STP
           </button>
           <button
             onClick={() => handleConditionTypeChange('NTP')}
@@ -337,6 +331,12 @@ export default function MassFlowPage() {
             className={`px-4 py-2 rounded ${conditionType === 'normal' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
           >
             常溫常壓
+          </button>
+          <button
+            onClick={() => handleConditionTypeChange('newSTP')}
+            className={`px-4 py-2 rounded ${conditionType === 'newSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+          >
+            《補充》IUPAC制定「冰點」
           </button>
         </div>
       </div>
