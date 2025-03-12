@@ -31,8 +31,8 @@ export default function Sidebar() {
   ]
 
   const footerNavItems = [
-    { name: '設定', icon: Settings, link: '/settings' },
-    { name: '聯絡我們', icon: Headset, link: '/contact' },
+    { name: '設定', icon: Settings, link: '/' },
+    { name: '聯絡我們', icon: Headset, link: '/' },
   ]
 
   const handleResize = () => {

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import Navbar from '../components/navbar'
 import Sidebar from '../components/sidebar'
@@ -14,17 +14,12 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-  applicationName: 'Hydroponic Calculator',
   title: 'Hydroponic Calculator',
   description: 'Fortune Ess Hydroponic Calculator',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',
-  },
-  manifest: '/manifest.json'
-}
-
-export const viewport: Viewport = {
-  themeColor: '#000000'
+  }
 }
 
 export default function rootLayout({
