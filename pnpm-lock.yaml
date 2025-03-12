@@ -10,7 +10,7 @@ importers:
     devDependencies:
       jakelint:
         specifier: ^1.0.12
-        version: 1.0.12(jiti@2.4.2)(typescript@5.7.3)
+        version: 1.0.13(jiti@2.4.2)(typescript@5.7.3)
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -65,7 +65,7 @@ importers:
         version: 9.22.0(jiti@2.4.2)
       jakelint:
         specifier: ^1.0.12
-        version: 1.0.12(jiti@2.4.2)(typescript@5.7.3)
+        version: 1.0.13(jiti@2.4.2)(typescript@5.7.3)
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -2060,8 +2060,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  jakelint@1.0.12:
-    resolution: {integrity: sha512-IvtSw68EwHbwayZQZLtQguFfIBcPCN2nA8OWucrGg/WVOwfxM3PPnZIYbYQMLQl1rWnoEcY2sNv+cD50ATBH2A==}
+  jakelint@1.0.13:
+    resolution: {integrity: sha512-hdijZ90D2G0e//ro+FZWZEI74TDCoWzpDqH9avH3oeyGUVs2SRrjq3zeU1EzjZmBeYH7WCHc6wmQC308Ysp+Uw==}
 
   jest-worker@26.6.2:
     resolution: {integrity: sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ==}
@@ -5380,7 +5380,7 @@ snapshots:
       filelist: 1.0.4
       minimatch: 3.1.2
 
-  jakelint@1.0.12(jiti@2.4.2)(typescript@5.7.3):
+  jakelint@1.0.13(jiti@2.4.2)(typescript@5.7.3):
     dependencies:
       '@eslint/js': 9.22.0
       '@stylistic/eslint-plugin': 4.2.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.7.3)
