@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 // 定義流量單位類型
 type TimeUnit = 'second' | 'minute' | 'hour' | 'day';
-type VolumeUnit = 'liter';
+type VolumeUnit = 'liter' | 'cubicMeter';
 type MassUnit = 'kg';
 type ChemicalUnit = 'mol';
 type CalculationType = 'ideal' | 'real';
@@ -18,6 +18,10 @@ interface FlowValues {
   literPerMinute: string;
   literPerHour: string;
   literPerDay: string;
+  cubicMeterPerSecond: string;
+  cubicMeterPerMinute: string;
+  cubicMeterPerHour: string;
+  cubicMeterPerDay: string;
   // 質量流量
   kgPerSecond: string;
   kgPerMinute: string;
@@ -65,6 +69,10 @@ export default function MassFlowPage() {
     literPerMinute: '',
     literPerHour: '',
     literPerDay: '',
+    cubicMeterPerSecond: '',
+    cubicMeterPerMinute: '',
+    cubicMeterPerHour: '',
+    cubicMeterPerDay: '',
     // 質量流量
     kgPerSecond: '',
     kgPerMinute: '',
@@ -88,6 +96,7 @@ export default function MassFlowPage() {
   // 體積轉換因子 (相對於公升)
   const volumeConversionFactors: Record<VolumeUnit, number> = {
     liter: 1,
+    cubicMeter: 1000,
   };
 
   // 質量轉換因子 (相對於公斤)
@@ -169,6 +178,9 @@ export default function MassFlowPage() {
     if (typeof unit === 'string' && unit.includes('liter')) {
       unitType = 'volume';
       specificUnit = 'liter';
+    } else if (typeof unit === 'string' && unit.includes('cubicMeter')) {
+      unitType = 'volume';
+      specificUnit = 'cubicMeter';
     } else if (typeof unit === 'string' && unit.includes('kg')) {
       unitType = 'mass';
       specificUnit = 'kg';
@@ -196,7 +208,7 @@ export default function MassFlowPage() {
     // 根據單位類型進行轉換
     if (unitType === 'volume') {
       // 體積單位轉換為公升
-      valueInLiterPerSecond = valueInLiterPerSecond / volumeConversionFactors[specificUnit as VolumeUnit];
+      valueInLiterPerSecond = valueInLiterPerSecond * volumeConversionFactors[specificUnit as VolumeUnit];
     } else if (unitType === 'mass') {
       // 質量單位轉換為公升
       const massInKg = numValue;
@@ -218,6 +230,12 @@ export default function MassFlowPage() {
       const literKey = `literPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues;
       if (literKey !== unit) {
         newValues[literKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey]).toFixed(6);
+      }
+
+      // 立方米單位
+      const cubicMeterKey = `cubicMeterPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues;
+      if (cubicMeterKey !== unit) {
+        newValues[cubicMeterKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey] / 1000).toFixed(6);
       }
       
       // 公斤單位
@@ -248,6 +266,10 @@ export default function MassFlowPage() {
       literPerMinute: '',
       literPerHour: '',
       literPerDay: '',
+      cubicMeterPerSecond: '',
+      cubicMeterPerMinute: '',
+      cubicMeterPerHour: '',
+      cubicMeterPerDay: '',
       // 質量流量
       kgPerSecond: '',
       kgPerMinute: '',
@@ -271,6 +293,7 @@ export default function MassFlowPage() {
 
   const volumeUnitLabels: Record<VolumeUnit, string> = {
     liter: 'L',
+    cubicMeter: 'm³',
   };
 
   const massUnitLabels: Record<MassUnit, string> = {
@@ -399,6 +422,15 @@ export default function MassFlowPage() {
             <div key={key} className="flex flex-col">
               <span className="text-white text-sm mb-1">{label}</span>
               {renderInputField(`literPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
+          <div className="text-white font-semibold">立方米 (m³)</div>
+          {Object.entries(timeUnitLabels).map(([key, label]) => (
+            <div key={key} className="flex flex-col">
+              <span className="text-white text-sm mb-1">{label}</span>
+              {renderInputField(`cubicMeterPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
             </div>
           ))}
         </div>
