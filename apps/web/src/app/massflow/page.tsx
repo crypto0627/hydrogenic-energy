@@ -1,38 +1,7 @@
 'use client'
 
+import { CalculationType, ChemicalUnit, ConditionType, FlowValues, GasType, MassUnit, TimeUnit, VolumeUnit } from '@/types/mass-type';
 import { useState } from 'react';
-
-// 定義流量單位類型
-type TimeUnit = 'second' | 'minute' | 'hour' | 'day';
-type VolumeUnit = 'liter' | 'cubicMeter';
-type MassUnit = 'kg';
-type ChemicalUnit = 'mol';
-type CalculationType = 'ideal' | 'real';
-type GasType = 'oxygen' | 'hydrogen';
-type ConditionType = 'oldSTP' | 'newSTP' | 'NTP' | 'normal';
-
-interface FlowValues {
-  // 體積流量
-  [key: string]: string;
-  literPerSecond: string;
-  literPerMinute: string;
-  literPerHour: string;
-  literPerDay: string;
-  cubicMeterPerSecond: string;
-  cubicMeterPerMinute: string;
-  cubicMeterPerHour: string;
-  cubicMeterPerDay: string;
-  // 質量流量
-  kgPerSecond: string;
-  kgPerMinute: string;
-  kgPerHour: string;
-  kgPerDay: string;
-  // 化學流量
-  molPerSecond: string;
-  molPerMinute: string;
-  molPerHour: string;
-  molPerDay: string;
-}
 
 export default function MassFlowPage() {
   const [calculationType, setCalculationType] = useState<CalculationType>('ideal');

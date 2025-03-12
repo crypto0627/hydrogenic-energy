@@ -94,7 +94,7 @@ export default function Sidebar() {
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center gap-2">
             <Leaf className="h-6 w-6" />
-            <Link href="/home" className="text-xl font-bold">Hydrogenic</Link>
+            <Link href="/" className="text-xl font-bold">Hydrogenic</Link>
           </div>
         </div>
 
