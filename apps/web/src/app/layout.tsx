@@ -14,22 +14,17 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
+  applicationName: 'Hydroponic Calculator',
   title: 'Hydroponic Calculator',
   description: 'Fortune Ess Hydroponic Calculator',
   icons: {
-    icon: '/fortune-ess.ico',
+    icon: '/favicon.ico',
   },
   manifest: '/manifest.json'
 }
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  minimumScale: 1,
-  viewportFit: 'cover',
-  userScalable: false,
+  themeColor: '#000000'
 }
 
 export default function rootLayout({
