@@ -1,12 +1,22 @@
 'use client'
 
 import { CalculationType, ChemicalUnit, ConditionType, FlowValues, GasType, MassUnit, TimeUnit, VolumeUnit } from '@/types/mass-type';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function MassFlowPage() {
   const [calculationType, setCalculationType] = useState<CalculationType>('ideal');
   const [gasType, setGasType] = useState<GasType>('oxygen');
   const [conditionType, setConditionType] = useState<ConditionType>('oldSTP');
+  const [temperature, setTemperature] = useState('0');
+  const [pressure, setPressure] = useState('1');
+  
+  // 下拉選單狀態
+  const [temperatureDropdownOpen, setTemperatureDropdownOpen] = useState(false);
+  const [pressureDropdownOpen, setPressureDropdownOpen] = useState(false);
+  
+  // 下拉選單參考
+  const temperatureDropdownRef = useRef<HTMLDivElement>(null);
+  const pressureDropdownRef = useRef<HTMLDivElement>(null);
   
   // 固定氣體密度和分子量
   const gasProperties = {
@@ -24,11 +34,65 @@ export default function MassFlowPage() {
         oldSTP: '0.08988',  // g/L at 0°C, 1 atm
         newSTP: '0.0895',   // g/L at 0°C, 1 bar
         NTP: '0.08375',     // g/L at 20°C, 1 atm
-        normal: '0.0827'    // g/L at 25°C, 1 atm
+        normal: '0.0827',   // g/L at 25°C, 1 atm
+        real: {
+          '1': {
+            '0': '0.8858', '10': '0.8544', '20': '0.8252', '30': '0.7979', '40': '0.7724',
+            '50': '0.7485', '60': '0.7260', '70': '0.7048', '80': '0.6849', '90': '0.6660', '100': '0.6481'
+          },
+          '1.5': {
+            '0': '1.3271', '10': '1.2801', '20': '1.2363', '30': '1.1954', '40': '1.1571',
+            '50': '1.1213', '60': '1.0876', '70': '1.0558', '80': '1.0259', '90': '0.9977', '100': '0.9709'
+          },
+          '2': {
+            '0': '1.7673', '10': '1.7046', '20': '1.6462', '30': '1.5917', '40': '1.5408',
+            '50': '1.4930', '60': '1.4481', '70': '1.4059', '80': '1.3661', '90': '1.3284', '100': '1.2928'
+          },
+          '2.5': {
+            '0': '2.2062', '10': '2.1279', '20': '2.0550', '30': '1.9870', '40': '1.9234',
+            '50': '1.8637', '60': '1.8077', '70': '1.7549', '80': '1.7052', '90': '1.6582', '100': '1.6138'
+          },
+          '3': {
+            '0': '2.6439', '10': '2.5500', '20': '2.4626', '30': '2.3810', '40': '2.3048',
+            '50': '2.2333', '60': '2.1662', '70': '2.1030', '80': '2.0434', '90': '1.9871', '100': '1.9339'
+          },
+          '3.5': {
+            '0': '3.0802', '10': '2.9707', '20': '2.8689', '30': '2.7739', '40': '2.6850',
+            '50': '2.6018', '60': '2.5235', '70': '2.4499', '80': '2.3805', '90': '2.3150', '100': '2.2530'
+          },
+          '20': {
+            '0': '16.456', '10': '15.895', '20': '15.370', '30': '14.881', '40': '14.423',
+            '50': '13.992', '60': '13.587', '70': '13.205', '80': '12.844', '90': '12.503', '100': '12.180'
+          },
+          '35': {
+            '0': '26.628', '10': '25.789', '20': '25.002', '30': '24.262', '40': '23.565',
+            '50': '22.907', '60': '22.286', '70': '21.697', '80': '21.140', '90': '20.611', '100': '20.108'
+          },
+          '45': {
+            '0': '32.427', '10': '31.464', '20': '30.557', '30': '29.701', '40': '28.891',
+            '50': '28.124', '60': '27.398', '70': '26.708', '80': '26.052', '90': '25.428', '100': '24.833'
+          },
+          '70': {
+            '0': '44.209', '10': '43.075', '20': '41.996', '30': '40.968', '40': '39.989',
+            '50': '39.054', '60': '38.162', '70': '37.309', '80': '36.493', '90': '35.712', '100': '34.963'
+          },
+          '90': {
+            '0': '51.543', '10': '50.354', '20': '49.218', '30': '48.129', '40': '47.086',
+            '50': '46.086', '60': '45.127', '70': '44.206', '80': '43.321', '90': '42.470', '100': '41.651'
+          },
+          '98': {
+            '0': '54.085', '10': '52.886', '20': '51.738', '30': '50.637', '40': '49.579',
+            '50': '48.564', '60': '47.588', '70': '46.650', '80': '45.747', '90': '44.877', '100': '44.040'
+          }
+        }
       },
       molarMass: '2.016'   // g/mol
     }
   };
+
+  // 定義索引簽名類型
+  type PressureKey = '1' | '1.5' | '2' | '2.5' | '3' | '3.5' | '20' | '35' | '45' | '70' | '90' | '98';
+  type TemperatureKey = '0' | '10' | '20' | '30' | '40' | '50' | '60' | '70' | '80' | '90' | '100';
 
   const [density, setDensity] = useState<string>(gasProperties[gasType].density[conditionType]);
   const [molarMass, setMolarMass] = useState<string>(gasProperties[gasType].molarMass);
@@ -54,6 +118,32 @@ export default function MassFlowPage() {
     molPerDay: '',
   });
 
+  // 點擊外部關閉下拉選單
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (temperatureDropdownRef.current && !temperatureDropdownRef.current.contains(event.target as Node)) {
+        setTemperatureDropdownOpen(false);
+      }
+      if (pressureDropdownRef.current && !pressureDropdownRef.current.contains(event.target as Node)) {
+        setPressureDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // 更新密度
+  useEffect(() => {
+    if (calculationType === 'real' && gasType === 'hydrogen') {
+      setDensity(gasProperties.hydrogen.density.real[pressure as PressureKey][temperature as TemperatureKey]);
+    } else {
+      setDensity(gasProperties[gasType].density[conditionType]);
+    }
+  }, [calculationType, gasType, conditionType, temperature, pressure]);
+
   // 轉換因子
   const timeConversionFactors: Record<TimeUnit, number> = {
     second: 1,
@@ -73,9 +163,6 @@ export default function MassFlowPage() {
     kg: 1,
   };
 
-  // 阿伏加德羅常數
-  const avogadroNumber = 6.02214076e23;
-
   // 切換計算類型
   const handleCalculationTypeChange = (type: CalculationType) => {
     setCalculationType(type);
@@ -85,7 +172,6 @@ export default function MassFlowPage() {
   // 切換氣體類型
   const handleGasTypeChange = (type: GasType) => {
     setGasType(type);
-    setDensity(gasProperties[type].density[conditionType]);
     setMolarMass(gasProperties[type].molarMass);
     resetValues();
   };
@@ -93,20 +179,21 @@ export default function MassFlowPage() {
   // 切換條件類型
   const handleConditionTypeChange = (type: ConditionType) => {
     setConditionType(type);
-    setDensity(gasProperties[gasType].density[type]);
     resetValues();
   };
 
-  // 處理密度變更
-  const handleDensityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDensity(gasProperties[gasType].density[conditionType]);
-    recalculateAll();
+  // 處理溫度變更
+  const handleTemperatureChange = (temp: string) => {
+    setTemperature(temp);
+    setTemperatureDropdownOpen(false);
+    resetValues();
   };
 
-  // 處理摩爾質量變更
-  const handleMolarMassChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMolarMass(gasProperties[gasType].molarMass);
-    recalculateAll();
+  // 處理壓力變更
+  const handlePressureChange = (pres: string) => {
+    setPressure(pres);
+    setPressureDropdownOpen(false);
+    resetValues();
   };
 
   // 重新計算所有值
@@ -287,6 +374,12 @@ export default function MassFlowPage() {
     </div>
   );
 
+  // 溫度選項
+  const temperatureOptions = ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100'];
+  
+  // 壓力選項
+  const pressureOptions = ['1', '1.5', '2', '2.5', '3', '3.5', '20', '35', '45', '70', '90', '98'];
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-white">質量流量換算</h1>
@@ -312,33 +405,86 @@ export default function MassFlowPage() {
 
       {/* 條件類型切換 */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-white">條件類型</h2>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => handleConditionTypeChange('oldSTP')}
-            className={`px-4 py-2 rounded ${conditionType === 'oldSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
-          >
-            STP
-          </button>
-          <button
-            onClick={() => handleConditionTypeChange('NTP')}
-            className={`px-4 py-2 rounded ${conditionType === 'NTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
-          >
-            NTP
-          </button>
-          <button
-            onClick={() => handleConditionTypeChange('normal')}
-            className={`px-4 py-2 rounded ${conditionType === 'normal' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
-          >
-            常溫常壓
-          </button>
-          <button
-            onClick={() => handleConditionTypeChange('newSTP')}
-            className={`px-4 py-2 rounded ${conditionType === 'newSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
-          >
-            《補充》IUPAC制定「冰點」
-          </button>
-        </div>
+        <h2 className="text-xl font-semibold mb-2 text-white">
+          {calculationType === 'ideal' ? '條件類型' : '條件類型 《依據 Peng-Robinson Calculations 換算》'}
+        </h2>
+        {calculationType === 'real' && gasType === 'hydrogen' ? (
+          <div className="flex gap-4">
+            <div className="flex-1 relative" ref={temperatureDropdownRef}>
+              <label className="block text-white mb-2">溫度 (°C)</label>
+              <div 
+                className="w-full p-2 bg-zinc-800 text-white rounded flex justify-between items-center cursor-pointer"
+                onClick={() => setTemperatureDropdownOpen(!temperatureDropdownOpen)}
+              >
+                <span>{temperature}</span>
+                <span>▼</span>
+              </div>
+              {temperatureDropdownOpen && (
+                <ul className="absolute z-10 w-full mt-1 bg-zinc-800 text-white rounded max-h-60 overflow-y-auto">
+                  {temperatureOptions.map(temp => (
+                    <li 
+                      key={temp} 
+                      className={`p-2 hover:bg-zinc-700 cursor-pointer ${temperature === temp ? 'bg-blue-600' : ''}`}
+                      onClick={() => handleTemperatureChange(temp)}
+                    >
+                      {temp}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="flex-1 relative" ref={pressureDropdownRef}>
+              <label className="block text-white mb-2">壓力 (MPa)</label>
+              <div 
+                className="w-full p-2 bg-zinc-800 text-white rounded flex justify-between items-center cursor-pointer"
+                onClick={() => setPressureDropdownOpen(!pressureDropdownOpen)}
+              >
+                <span>{pressure}</span>
+                <span>▼</span>
+              </div>
+              {pressureDropdownOpen && (
+                <ul className="absolute z-10 w-full mt-1 bg-zinc-800 text-white rounded max-h-60 overflow-y-auto">
+                  {pressureOptions.map(pres => (
+                    <li 
+                      key={pres} 
+                      className={`p-2 hover:bg-zinc-700 cursor-pointer ${pressure === pres ? 'bg-blue-600' : ''}`}
+                      onClick={() => handlePressureChange(pres)}
+                    >
+                      {pres}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => handleConditionTypeChange('oldSTP')}
+              className={`px-4 py-2 rounded ${conditionType === 'oldSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+            >
+              STP
+            </button>
+            <button
+              onClick={() => handleConditionTypeChange('NTP')}
+              className={`px-4 py-2 rounded ${conditionType === 'NTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+            >
+              NTP
+            </button>
+            <button
+              onClick={() => handleConditionTypeChange('normal')}
+              className={`px-4 py-2 rounded ${conditionType === 'normal' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+            >
+              常溫常壓
+            </button>
+            <button
+              onClick={() => handleConditionTypeChange('newSTP')}
+              className={`px-4 py-2 rounded ${conditionType === 'newSTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+            >
+              《補充》IUPAC制定「冰點」
+            </button>
+          </div>
+        )}
       </div>
       
       {/* 氣體類型切換 */}
