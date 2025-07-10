@@ -22,19 +22,19 @@ export default function MassFlowPage() {
   const gasProperties = {
     oxygen: {
       density: {
-        oldSTP: '1.429',    // g/L at 0°C, 1 atm
-        newSTP: '1.420',    // g/L at 0°C, 1 bar
-        NTP: '1.292',       // g/L at 20°C, 1 atm
-        normal: '1.276'     // g/L at 25°C, 1 atm
+        oldSTP: '1429',    // g/L at 0°C, 1 atm
+        newSTP: '1420',    // g/L at 0°C, 1 bar
+        NTP: '1292',       // g/L at 20°C, 1 atm
+        normal: '1276'     // g/L at 25°C, 1 atm
       },
       molarMass: '31.999'  // g/mol
     },
     hydrogen: {
       density: {
-        oldSTP: '0.08988',  // g/L at 0°C, 1 atm
-        newSTP: '0.0895',   // g/L at 0°C, 1 bar
-        NTP: '0.08375',     // g/L at 20°C, 1 atm
-        normal: '0.0827',   // g/L at 25°C, 1 atm
+        oldSTP: '89.88',  // g/L at 0°C, 1 atm
+        newSTP: '89.5',   // g/L at 0°C, 1 bar
+        NTP: '83.75',     // g/L at 20°C, 1 atm
+        normal: '82.7',   // g/L at 25°C, 1 atm
         real: {
           '1': {
             '0': '0.8858', '10': '0.8544', '20': '0.8252', '30': '0.7979', '40': '0.7724',
