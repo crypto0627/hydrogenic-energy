@@ -1,7 +1,7 @@
 'use client'
 
 import { CalculationType, ChemicalUnit, ConditionType, FlowValues, GasType, MassUnit, TimeUnit, VolumeUnit } from '@/types/mass-type';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function MassFlowPage() {
   const [calculationType, setCalculationType] = useState<CalculationType>('ideal');
@@ -32,9 +32,9 @@ export default function MassFlowPage() {
     hydrogen: {
       density: {
         oldSTP: '89.88',  // g/L at 0°C, 1 atm
-        newSTP: '89.5',   // g/L at 0°C, 1 bar
-        NTP: '83.75',     // g/L at 20°C, 1 atm
-        normal: '82.7',   // g/L at 25°C, 1 atm
+        newSTP: '0.0895',   // g/L at 0°C, 1 bar
+        NTP: '0.08375',     // g/L at 20°C, 1 atm
+        normal: '0.0827',   // g/L at 25°C, 1 atm
         real: {
           '1': {
             '0': '0.8858', '10': '0.8544', '20': '0.8252', '30': '0.7979', '40': '0.7724',
@@ -297,7 +297,7 @@ export default function MassFlowPage() {
       // 公斤單位
       const kgKey = `kgPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues;
       if (kgKey !== unit) {
-        newValues[kgKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey] * densityValue).toFixed(6);
+        newValues[kgKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey] * densityValue / 1000).toFixed(6);
       }
       
       // 摩爾單位
