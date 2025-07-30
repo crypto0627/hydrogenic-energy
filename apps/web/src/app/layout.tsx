@@ -17,9 +17,6 @@ export const metadata: Metadata = {
   title: 'Hydroponic Calculator',
   description: 'Fortune Ess Hydroponic Calculator',
   manifest: '/manifest.json',
-  icons: {
-    icon: '/favicon.ico',
-  }
 }
 
 export default function rootLayout({

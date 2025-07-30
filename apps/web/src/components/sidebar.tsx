@@ -1,5 +1,5 @@
 'use client'
-import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, Weight } from 'lucide-react'
+import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, Weight, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
@@ -19,9 +19,11 @@ export default function Sidebar() {
       icon: Calculator,
       hasSubmenu: true,
       submenu: [
-        { id: 'pressure', icon: Gauge, link: '/pressure' },
-        { id: 'flowrate', icon: Activity, link: '/flowrate' },
-        { id: 'massflow', icon: Weight, link: '/massflow' }
+        { id: 'pressure', icon: Gauge, link: '/calculator/pressure' },
+        { id: 'flowrate', icon: Activity, link: '/calculator/flowrate' },
+        { id: 'massflow', icon: Weight, link: '/calculator/massflow' },
+        { id: 'hydrogen output', icon: Leaf, link: '/calculator/hydrogen-output' },
+        { id: 'power output', icon: Zap, link: '/calculator/power-output' }
       ],
     },
     {
