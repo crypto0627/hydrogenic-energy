@@ -14,46 +14,46 @@ export type MassUnit = 'kg';
 export type ChemicalUnit = 'mol';
 
 export interface FlowValues {
-  literPerSecond: string;
-  literPerMinute: string;
-  literPerHour: string;
-  literPerDay: string;
-  cubicMeterPerSecond: string;
-  cubicMeterPerMinute: string;
-  cubicMeterPerHour: string;
-  cubicMeterPerDay: string;
-  kgPerSecond: string;
-  kgPerMinute: string;
-  kgPerHour: string;
-  kgPerDay: string;
-  molPerSecond: string;
-  molPerMinute: string;
-  molPerHour: string;
-  molPerDay: string;
+  literPerSecond: string
+  literPerMinute: string
+  literPerHour: string
+  literPerDay: string
+  cubicMeterPerSecond: string
+  cubicMeterPerMinute: string
+  cubicMeterPerHour: string
+  cubicMeterPerDay: string
+  kgPerSecond: string
+  kgPerMinute: string
+  kgPerHour: string
+  kgPerDay: string
+  molPerSecond: string
+  molPerMinute: string
+  molPerHour: string
+  molPerDay: string
 }
 
 // Interface for gas properties structure
 export interface GasProperty {
-  molarMass: string;
+  molarMass: string
   density: {
     real: {
       [P in PressureKey]: {
         [T in TemperatureKey]: string;
       };
-    };
-    oldSTP?: string;
-    NTP?: string;
-    normal?: string;
-    newSTP?: string;
+    }
+    oldSTP?: string
+    NTP?: string
+    normal?: string
+    newSTP?: string
     // Allow indexing by ConditionType string for dynamic access
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
 }
 
 // Interface for the overall gasProperties object
 export interface GasProperties {
-  oxygen: GasProperty;
-  hydrogen: GasProperty;
+  oxygen: GasProperty
+  hydrogen: GasProperty
   // Allows adding other gas types dynamically if needed
-  [key: string]: GasProperty;
+  [key: string]: GasProperty
 }
