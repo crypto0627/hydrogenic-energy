@@ -108,7 +108,7 @@ export default function SiOutput() {
         <OutputBox label="需要 NaOH" value={format(naoh)} unit="kg" />
         <OutputBox label="需要 H₂O" value={format(h2o)} unit="kg" />
         <OutputBox label="產出 Na₂SiO₃" value={format(na2sio3)} unit="kg" />
-        <OutputBox label="產出 2H₂" value={format(h2)} unit="kg" />
+        <OutputBox label="產出 H₂" value={format(h2)} unit="kg" />
       </div>
 
       {/* 固定參數區塊 */}
