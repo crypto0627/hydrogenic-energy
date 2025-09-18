@@ -1,17 +1,17 @@
 // src/types/mass-flow-types.ts
 
-export type CalculationType = 'ideal' | 'real';
-export type GasType = 'oxygen' | 'hydrogen';
-export type ConditionType = 'oldSTP' | 'NTP' | 'normal' | 'newSTP';
+export type CalculationType = 'ideal' | 'real'
+export type GasType = 'oxygen' | 'hydrogen'
+export type ConditionType = 'oldSTP' | 'ntp' | 'normal' | 'newSTP'
 
-// Specific keys for pressure and temperature options
-export type PressureKey = '1' | '1.5' | '2' | '2.5' | '3' | '3.5' | '20' | '35' | '45' | '70' | '90' | '98';
-export type TemperatureKey = '0' | '10' | '20' | '30' | '40' | '50' | '60' | '70' | '80' | '90' | '100';
+// Numeric types for temperature and pressure inputs
+export type TemperatureValue = number // 0-100
+export type PressureValue = number // 0.0-98.0
 
-export type TimeUnit = 'second' | 'minute' | 'hour' | 'day';
-export type VolumeUnit = 'liter' | 'cubicMeter';
-export type MassUnit = 'kg';
-export type ChemicalUnit = 'mol';
+export type TimeUnit = 'second' | 'minute' | 'hour' | 'day'
+export type VolumeUnit = 'liter' | 'cubicMeter'
+export type MassUnit = 'kg'
+export type ChemicalUnit = 'mol'
 
 export interface FlowValues {
   literPerSecond: string
@@ -36,13 +36,8 @@ export interface FlowValues {
 export interface GasProperty {
   molarMass: string
   density: {
-    real: {
-      [P in PressureKey]: {
-        [T in TemperatureKey]: string;
-      };
-    }
     oldSTP?: string
-    NTP?: string
+    ntp?: string
     normal?: string
     newSTP?: string
     // Allow indexing by ConditionType string for dynamic access

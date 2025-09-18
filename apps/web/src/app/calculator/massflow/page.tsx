@@ -1,9 +1,9 @@
 // src/app/mass-flow/page.tsx
 
-'use client';
+'use client'
 
-import { useMassFlowConverter } from '@/hooks/useMassFlowConverter';
-import { FlowValues } from '@/types/mass-type';
+import { useMassFlowConverter } from '@/hooks/useMassFlowConverter'
+import { FlowValues } from '@/types/mass-type'
 
 export default function MassFlowPage() {
   const {
@@ -12,25 +12,19 @@ export default function MassFlowPage() {
     conditionType,
     temperature,
     pressure,
-    temperatureDropdownOpen,
-    pressureDropdownOpen,
     density,
     molarMass,
     values,
-    temperatureDropdownRef,
-    pressureDropdownRef,
     handleCalculationTypeChange,
     handleGasTypeChange,
     handleConditionTypeChange,
     handleTemperatureChange,
     handlePressureChange,
-    setTemperatureDropdownOpen,
-    setPressureDropdownOpen,
     handleChange,
-    timeUnitLabels,
-    temperatureOptions,
-    pressureOptions,
-  } = useMassFlowConverter();
+    validateTemperature,
+    validatePressure,
+    timeUnitLabels
+  } = useMassFlowConverter()
 
   // 輔助函式：渲染輸入欄位
   const renderInputField = (unit: keyof FlowValues, label: string) => (
@@ -45,12 +39,12 @@ export default function MassFlowPage() {
         onWheel={(e) => e.currentTarget.blur()}
       />
     </div>
-  );
+  )
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-white">質量流量換算器</h1>
-      
+
       {/* 計算類型選擇 */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2 text-white">計算類型</h2>
@@ -73,54 +67,52 @@ export default function MassFlowPage() {
       {/* 狀態條件選擇 */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2 text-white">
-          {calculationType === 'ideal' ? '狀態條件' : '狀態條件（基於 Peng-Robinson 計算）'}
+          {calculationType === 'ideal'
+            ? '狀態條件'
+            : '狀態條件（基於 Peng-Robinson 計算）'}
         </h2>
-        {calculationType === 'real' && gasType === 'hydrogen' ? (
+        {calculationType === 'real' ? (
           <div className="flex gap-4">
-            <div className="flex-1 relative" ref={temperatureDropdownRef}>
+            <div className="flex-1">
               <label className="block text-white mb-2">溫度 (°C)</label>
-              <div 
-                className="w-full p-2 bg-zinc-800 text-white rounded flex justify-between items-center cursor-pointer"
-                onClick={() => setTemperatureDropdownOpen(!temperatureDropdownOpen)}
-              >
-                <span>{temperature}</span>
-                <span>▼</span>
-              </div>
-              {temperatureDropdownOpen && (
-                <ul className="absolute z-10 w-full mt-1 bg-zinc-800 text-white rounded max-h-60 overflow-y-auto">
-                  {temperatureOptions.map(temp => (
-                    <li 
-                      key={temp} 
-                      className={`p-2 hover:bg-zinc-700 cursor-pointer ${temperature === temp ? 'bg-blue-600' : ''}`}
-                      onClick={() => handleTemperatureChange(temp)}
-                    >
-                      {temp}
-                    </li>
-                  ))}
-                </ul>
+              <input
+                type="number"
+                value={temperature === 0 ? '' : temperature}
+                onChange={(e) => {
+                  handleTemperatureChange(e.target.value)
+                }}
+                className="w-full p-2 bg-zinc-700 text-white rounded"
+                placeholder="0-100"
+                min="0"
+                max="100"
+                step="0.1"
+                onWheel={(e) => e.currentTarget.blur()}
+              />
+              {!validateTemperature(temperature) && temperature !== 0 && (
+                <p className="text-red-400 text-sm mt-1">
+                  請輸入 0-100 之間的溫度
+                </p>
               )}
             </div>
-            <div className="flex-1 relative" ref={pressureDropdownRef}>
+            <div className="flex-1">
               <label className="block text-white mb-2">壓力 (MPa)</label>
-              <div 
-                className="w-full p-2 bg-zinc-800 text-white rounded flex justify-between items-center cursor-pointer"
-                onClick={() => setPressureDropdownOpen(!pressureDropdownOpen)}
-              >
-                <span>{pressure}</span>
-                <span>▼</span>
-              </div>
-              {pressureDropdownOpen && (
-                <ul className="absolute z-10 w-full mt-1 bg-zinc-800 text-white rounded max-h-60 overflow-y-auto">
-                  {pressureOptions.map(pres => (
-                    <li 
-                      key={pres} 
-                      className={`p-2 hover:bg-zinc-700 cursor-pointer ${pressure === pres ? 'bg-blue-600' : ''}`}
-                      onClick={() => handlePressureChange(pres)}
-                    >
-                      {pres}
-                    </li>
-                  ))}
-                </ul>
+              <input
+                type="number"
+                value={pressure === 0 ? '' : pressure}
+                onChange={(e) => {
+                  handlePressureChange(e.target.value)
+                }}
+                className="w-full p-2 bg-zinc-700 text-white rounded"
+                placeholder="0.0-98.0"
+                min="0.0"
+                max="98.0"
+                step="0.1"
+                onWheel={(e) => e.currentTarget.blur()}
+              />
+              {!validatePressure(pressure) && pressure !== 1.0 && (
+                <p className="text-red-400 text-sm mt-1">
+                  請輸入 0.0-98.0 之間的壓力
+                </p>
               )}
             </div>
           </div>
@@ -133,8 +125,8 @@ export default function MassFlowPage() {
               標準狀態（STP）
             </button>
             <button
-              onClick={() => handleConditionTypeChange('NTP')}
-              className={`px-4 py-2 rounded ${conditionType === 'NTP' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
+              onClick={() => handleConditionTypeChange('ntp')}
+              className={`px-4 py-2 rounded ${conditionType === 'ntp' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-white'}`}
             >
               標準溫壓（NTP）
             </button>
@@ -153,7 +145,7 @@ export default function MassFlowPage() {
           </div>
         )}
       </div>
-      
+
       {/* 氣體類型選擇 */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2 text-white">氣體類型</h2>
@@ -172,7 +164,7 @@ export default function MassFlowPage() {
           </button>
         </div>
       </div>
-      
+
       {/* 密度與莫耳質量顯示 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
@@ -194,7 +186,7 @@ export default function MassFlowPage() {
           />
         </div>
       </div>
-      
+
       {/* 流量換算表格 */}
       <div className="bg-zinc-800 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-white">體積流量</h2>
@@ -203,7 +195,10 @@ export default function MassFlowPage() {
           {Object.entries(timeUnitLabels).map(([key, label]) => (
             <div key={key} className="flex flex-col">
               <span className="text-white text-sm mb-1">{label}</span>
-              {renderInputField(`literPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              {renderInputField(
+                `literPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues,
+                ''
+              )}
             </div>
           ))}
         </div>
@@ -212,12 +207,15 @@ export default function MassFlowPage() {
           {Object.entries(timeUnitLabels).map(([key, label]) => (
             <div key={key} className="flex flex-col">
               <span className="text-white text-sm mb-1">{label}</span>
-              {renderInputField(`cubicMeterPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              {renderInputField(
+                `cubicMeterPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues,
+                ''
+              )}
             </div>
           ))}
         </div>
       </div>
-      
+
       <div className="bg-zinc-800 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-white">質量流量</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -225,12 +223,15 @@ export default function MassFlowPage() {
           {Object.entries(timeUnitLabels).map(([key, label]) => (
             <div key={key} className="flex flex-col">
               <span className="text-white text-sm mb-1">{label}</span>
-              {renderInputField(`kgPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              {renderInputField(
+                `kgPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues,
+                ''
+              )}
             </div>
           ))}
         </div>
       </div>
-      
+
       <div className="bg-zinc-800 p-4 rounded-lg">
         <h2 className="text-xl font-semibold mb-4 text-white">化學流量</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -238,11 +239,14 @@ export default function MassFlowPage() {
           {Object.entries(timeUnitLabels).map(([key, label]) => (
             <div key={key} className="flex flex-col">
               <span className="text-white text-sm mb-1">{label}</span>
-              {renderInputField(`molPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues, '')}
+              {renderInputField(
+                `molPer${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof FlowValues,
+                ''
+              )}
             </div>
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }

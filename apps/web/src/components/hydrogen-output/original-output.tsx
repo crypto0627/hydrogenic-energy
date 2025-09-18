@@ -21,21 +21,23 @@ function InputBox({
   min,
   max,
   step = 0.01,
-  placeholder = '',
+  placeholder = ''
 }: InputBoxProps) {
   const handleWheel = (e: React.WheelEvent<HTMLInputElement>) => {
-    (e.target as HTMLInputElement).blur()
+    ;(e.target as HTMLInputElement).blur()
   }
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-blue-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-blue-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-zinc-800 rounded-lg px-3 py-2 border-2 border-zinc-700 focus-within:border-blue-500 transition">
         <input
           type="number"
           inputMode="decimal"
           className="w-full bg-transparent text-white outline-none placeholder-zinc-500"
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           min={min}
           max={max}
           step={step}
@@ -57,7 +59,9 @@ type OutputBoxProps = {
 function OutputBox({ label, value, unit }: OutputBoxProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-blue-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-blue-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-gradient-to-r from-blue-900 via-zinc-900 to-blue-900 rounded-lg px-3 py-2 border-2 border-blue-700">
         <input
           type="text"
@@ -66,7 +70,9 @@ function OutputBox({ label, value, unit }: OutputBoxProps) {
           readOnly
           tabIndex={-1}
         />
-        {unit && <span className="ml-2 text-green-300 font-bold text-lg">{unit}</span>}
+        {unit && (
+          <span className="ml-2 text-green-300 font-bold text-lg">{unit}</span>
+        )}
       </div>
     </div>
   )
@@ -117,9 +123,15 @@ export default function Output() {
         <table className="min-w-full bg-gradient-to-r from-zinc-800 via-blue-950 to-zinc-800 rounded-xl overflow-hidden text-white shadow-2xl border border-blue-900">
           <thead>
             <tr>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">電量 (kWh)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">效率 (%)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">產氫量 (kg)</th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                電量 (kWh)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                效率 (%)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                產氫量 (kg)
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -19,27 +19,31 @@ function InputBox({
   unit,
   min,
   step = 0.01,
-  placeholder = '',
+  placeholder = ''
 }: InputBoxProps) {
   const handleWheel = (e: React.WheelEvent<HTMLInputElement>) => {
-    (e.target as HTMLInputElement).blur()
+    ;(e.target as HTMLInputElement).blur()
   }
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-green-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-green-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-zinc-800 rounded-lg px-3 py-2 border-2 border-zinc-700 focus-within:border-green-500 transition">
         <input
           type="number"
           inputMode="decimal"
           className="w-full bg-transparent text-white outline-none placeholder-zinc-500"
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           min={min}
           step={step}
           placeholder={placeholder}
           onWheel={handleWheel}
         />
-        {unit && <span className="ml-2 text-green-400 font-medium">{unit}</span>}
+        {unit && (
+          <span className="ml-2 text-green-400 font-medium">{unit}</span>
+        )}
       </div>
     </div>
   )
@@ -54,7 +58,9 @@ type OutputBoxProps = {
 function OutputBox({ label, value, unit }: OutputBoxProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-green-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-green-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-gradient-to-r from-green-900 via-zinc-900 to-green-900 rounded-lg px-3 py-2 border-2 border-green-700">
         <input
           type="text"
@@ -63,7 +69,9 @@ function OutputBox({ label, value, unit }: OutputBoxProps) {
           readOnly
           tabIndex={-1}
         />
-        {unit && <span className="ml-2 text-yellow-300 font-bold text-lg">{unit}</span>}
+        {unit && (
+          <span className="ml-2 text-yellow-300 font-bold text-lg">{unit}</span>
+        )}
       </div>
     </div>
   )
@@ -114,13 +122,25 @@ export default function SiOutput() {
       {/* 固定參數區塊 */}
       <div className="mt-4 text-zinc-300 text-sm text-center">
         <div className="inline-block bg-green-900/30 rounded px-4 py-2 mb-2">
-          <div className="font-semibold mb-1 text-green-200">固定參數 (g/mol)：</div>
+          <div className="font-semibold mb-1 text-green-200">
+            固定參數 (g/mol)：
+          </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
-            <span>Si：<span className="font-mono">{SI_MOLAR_MASS}</span></span>
-            <span>NaOH：<span className="font-mono">{NAOH_MOLAR_MASS}</span></span>
-            <span>H₂O：<span className="font-mono">{H2O_MOLAR_MASS}</span></span>
-            <span>Na₂SiO₃：<span className="font-mono">{NA2SIO3_MOLAR_MASS}</span></span>
-            <span>H₂：<span className="font-mono">{H2_MOLAR_MASS}</span></span>
+            <span>
+              Si：<span className="font-mono">{SI_MOLAR_MASS}</span>
+            </span>
+            <span>
+              NaOH：<span className="font-mono">{NAOH_MOLAR_MASS}</span>
+            </span>
+            <span>
+              H₂O：<span className="font-mono">{H2O_MOLAR_MASS}</span>
+            </span>
+            <span>
+              Na₂SiO₃：<span className="font-mono">{NA2SIO3_MOLAR_MASS}</span>
+            </span>
+            <span>
+              H₂：<span className="font-mono">{H2_MOLAR_MASS}</span>
+            </span>
           </div>
         </div>
       </div>

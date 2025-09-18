@@ -1,5 +1,16 @@
 'use client'
-import { Activity, Calculator, Gauge, Headset, LayoutDashboard, Leaf, LogOut, Settings, Weight, Zap } from 'lucide-react'
+import {
+  Activity,
+  Calculator,
+  Gauge,
+  Headset,
+  LayoutDashboard,
+  Leaf,
+  LogOut,
+  Settings,
+  Weight,
+  Zap
+} from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
@@ -12,7 +23,7 @@ export default function Sidebar() {
     {
       id: 'dashboard',
       icon: LayoutDashboard,
-      link: '/',
+      link: '/'
     },
     {
       id: 'calculator',
@@ -22,26 +33,30 @@ export default function Sidebar() {
         { id: 'pressure', icon: Gauge, link: '/calculator/pressure' },
         { id: 'flowrate', icon: Activity, link: '/calculator/flowrate' },
         { id: 'massflow', icon: Weight, link: '/calculator/massflow' },
-        { id: 'hydrogen output', icon: Leaf, link: '/calculator/hydrogen-output' },
+        {
+          id: 'hydrogen output',
+          icon: Leaf,
+          link: '/calculator/hydrogen-output'
+        },
         { id: 'power output', icon: Zap, link: '/calculator/power-output' }
-      ],
+      ]
     },
     {
       id: 'logout',
-      icon: LogOut,
-    },
+      icon: LogOut
+    }
   ]
 
   const footerNavItems = [
     { name: '設定', icon: Settings, link: '/' },
-    { name: '聯絡我們', icon: Headset, link: '/' },
+    { name: '聯絡我們', icon: Headset, link: '/' }
   ]
 
   const handleResize = () => {
     if (window.innerWidth >= 1024) {
       setIsSidebarOpen(true)
     } else {
-      setIsSidebarOpen(false) 
+      setIsSidebarOpen(false)
     }
   }
 
@@ -56,7 +71,7 @@ export default function Sidebar() {
   }
 
   const toggleSubmenu = (itemId: string) => {
-    setActiveSidebar(prevState => prevState === itemId ? '' : itemId)
+    setActiveSidebar((prevState) => (prevState === itemId ? '' : itemId))
   }
 
   return (
@@ -76,7 +91,9 @@ export default function Sidebar() {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d={isSidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+            d={
+              isSidebarOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'
+            }
           />
         </svg>
       </button>
@@ -89,14 +106,17 @@ export default function Sidebar() {
         />
       )}
 
-      <div className={`bg-black text-white min-h-screen flex flex-col transition-all duration-300 ease-in-out fixed lg:relative z-40 
-        ${isSidebarOpen ? 'w-64' : 'w-0 -ml-64 lg:w-64 lg:ml-0'}`}>
-
+      <div
+        className={`bg-black text-white min-h-screen flex flex-col transition-all duration-300 ease-in-out fixed lg:relative z-40 
+        ${isSidebarOpen ? 'w-64' : 'w-0 -ml-64 lg:w-64 lg:ml-0'}`}
+      >
         {/* Sidebar Header */}
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center gap-2">
             <Leaf className="h-6 w-6" />
-            <Link href="/" className="text-xl font-bold">Hydrogenic</Link>
+            <Link href="/" className="text-xl font-bold">
+              Hydrogenic
+            </Link>
           </div>
         </div>
 
@@ -161,7 +181,9 @@ export default function Sidebar() {
                                 }
                               }}
                             >
-                              {subItem.icon && <subItem.icon className="h-4 w-4" />}
+                              {subItem.icon && (
+                                <subItem.icon className="h-4 w-4" />
+                              )}
                               {subItem.id}
                             </Link>
                           </li>

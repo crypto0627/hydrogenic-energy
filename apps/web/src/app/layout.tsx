@@ -6,21 +6,21 @@ import './globals.css'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
+  variable: '--font-geist-sans'
 })
 const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
+  variable: '--font-geist-mono'
 })
 
 export const metadata: Metadata = {
   title: 'Hydroponic Calculator',
   description: 'Fortune Ess Hydroponic Calculator',
-  manifest: '/manifest.json',
+  manifest: '/manifest.json'
 }
 
 export default function rootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode
 }>) {
@@ -32,7 +32,11 @@ export default function rootLayout({
           <div className="flex-1 flex flex-col bg-zinc-900">
             <Navbar />
             <main className="flex-1 p-4 overflow-y-auto">{children}</main>
-            <footer className="p-4"><p className="text-center text-white">&copy; 2025 Fortune Ess. All rights reserved.</p></footer>
+            <footer className="p-4">
+              <p className="text-center text-white">
+                &copy; 2025 Fortune Ess. All rights reserved.
+              </p>
+            </footer>
           </div>
         </div>
       </body>

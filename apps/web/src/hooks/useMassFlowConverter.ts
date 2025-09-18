@@ -5,8 +5,6 @@ import {
   chemicalUnitLabels,
   massConversionFactors,
   massUnitLabels,
-  pressureOptions,
-  temperatureOptions,
   timeConversionFactors,
   timeUnitLabels,
   volumeConversionFactors,
@@ -19,25 +17,21 @@ import {
   FlowValues,
   GasType,
   MassUnit,
-  PressureKey,
-  TemperatureKey,
+  PressureValue,
+  TemperatureValue,
   TimeUnit,
   VolumeUnit,
 } from '@/types/mass-type'
-import { useEffect, useRef, useState } from 'react'
+import { calculateDensityPR } from '@/utils/pengRobinson'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export function useMassFlowConverter() {
-  const [calculationType, setCalculationType] = useState<CalculationType>('ideal')
+  const [calculationType, setCalculationType] =
+    useState<CalculationType>('ideal')
   const [gasType, setGasType] = useState<GasType>('oxygen')
   const [conditionType, setConditionType] = useState<ConditionType>('oldSTP')
-  const [temperature, setTemperature] = useState<TemperatureKey>('0')
-  const [pressure, setPressure] = useState<PressureKey>('1')
-
-  const [temperatureDropdownOpen, setTemperatureDropdownOpen] = useState(false)
-  const [pressureDropdownOpen, setPressureDropdownOpen] = useState(false)
-
-  const temperatureDropdownRef = useRef<HTMLDivElement>(null)
-  const pressureDropdownRef = useRef<HTMLDivElement>(null)
+  const [temperature, setTemperature] = useState<TemperatureValue>(0)
+  const [pressure, setPressure] = useState<PressureValue>(1.0)
 
   const [density, setDensity] = useState<string>(
     gasProperties[gasType].density[conditionType] ?? '',
@@ -64,34 +58,45 @@ export function useMassFlowConverter() {
     molPerDay: '',
   })
 
-  // Effect to close dropdowns when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (temperatureDropdownRef.current && !temperatureDropdownRef.current.contains(event.target as Node)) {
-        setTemperatureDropdownOpen(false)
-      }
-      if (pressureDropdownRef.current && !pressureDropdownRef.current.contains(event.target as Node)) {
-        setPressureDropdownOpen(false)
-      }
-    }
+  // Validation functions
+  const validateTemperature = (temp: number): boolean => {
+    return temp >= 0 && temp <= 100
+  }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  const validatePressure = (pres: number): boolean => {
+    return pres >= 0.0 && pres <= 98.0
+  }
 
-  // Effect to update density based on gas type, calculation type, and conditions
-  useEffect(() => {
-    if (calculationType === 'real' && gasType === 'hydrogen') {
-      const realDensity =
-        gasProperties.hydrogen?.density?.real?.[pressure]?.[temperature]
-      setDensity(realDensity ?? '')
+  // Memoized density calculation to prevent unnecessary recalculations
+  const calculatedDensity = useMemo(() => {
+    if (calculationType === 'real') {
+      // Use Peng-Robinson equation for real gas calculations
+      // Only calculate if both temperature and pressure are valid and not 0
+      if (
+        temperature > 0 &&
+        pressure > 0 &&
+        validateTemperature(temperature) &&
+        validatePressure(pressure)
+      ) {
+        try {
+          return calculateDensityPR(temperature, pressure, gasType).toFixed(6)
+        } catch (error) {
+          console.error('Error calculating density:', error)
+          return ''
+        }
+      } else {
+        return ''
+      }
     } else {
-      const densityValue = gasProperties[gasType]?.density?.[conditionType]
-      setDensity(densityValue ?? '')
+      // Use predefined values for ideal gas calculations
+      return gasProperties[gasType]?.density?.[conditionType] ?? ''
     }
   }, [calculationType, gasType, conditionType, temperature, pressure])
+
+  // Effect to update density
+  useEffect(() => {
+    setDensity(calculatedDensity)
+  }, [calculatedDensity])
 
   // Resets all flow values to empty strings
   const resetValues = () => {
@@ -134,19 +139,28 @@ export function useMassFlowConverter() {
     resetValues()
   }
 
-  // Handles changing the temperature for real gas calculations
-  const handleTemperatureChange = (temp: TemperatureKey) => {
-    setTemperature(temp)
-    setTemperatureDropdownOpen(false)
-    resetValues()
-  }
+  // Debounced handlers to prevent excessive calculations
+  const handleTemperatureChange = useCallback((temp: number | string) => {
+    const numTemp = typeof temp === 'string' ? parseFloat(temp) : temp
+    // Only update if input is empty (NaN) or valid temperature
+    if (isNaN(numTemp)) {
+      setTemperature(0) // Set to 0 for empty input
+    } else if (validateTemperature(numTemp)) {
+      setTemperature(numTemp)
+      resetValues()
+    }
+  }, [])
 
-  // Handles changing the pressure for real gas calculations
-  const handlePressureChange = (pres: PressureKey) => {
-    setPressure(pres)
-    setPressureDropdownOpen(false)
-    resetValues()
-  }
+  const handlePressureChange = useCallback((pres: number | string) => {
+    const numPres = typeof pres === 'string' ? parseFloat(pres) : pres
+    // Only update if input is empty (NaN) or valid pressure
+    if (isNaN(numPres)) {
+      setPressure(0) // Set to 0 for empty input
+    } else if (validatePressure(numPres)) {
+      setPressure(numPres)
+      resetValues()
+    }
+  }, [])
 
   // Central function to calculate all unit conversions based on a single input
   const calculateAll = (value: string, unit: keyof FlowValues) => {
@@ -201,21 +215,28 @@ export function useMassFlowConverter() {
     let valueInLiterPerSecond = numValue
 
     // Convert the input value to the common base: liters per second
-    valueInLiterPerSecond = valueInLiterPerSecond / timeConversionFactors[timeUnit]
+    valueInLiterPerSecond =
+      valueInLiterPerSecond / timeConversionFactors[timeUnit]
 
     if (unitType === 'volume') {
-      valueInLiterPerSecond = valueInLiterPerSecond * volumeConversionFactors[specificUnit as VolumeUnit]
+      valueInLiterPerSecond =
+        valueInLiterPerSecond *
+        volumeConversionFactors[specificUnit as VolumeUnit]
     } else if (unitType === 'mass') {
       // Convert mass (kg) to volume (liters) using density
-      const massInKg = numValue * massConversionFactors[specificUnit as MassUnit] // Ensure kg
-      valueInLiterPerSecond = massInKg / densityValue / timeConversionFactors[timeUnit] * 1000 // density is g/L, need kg/L. 1000g = 1kg. So density g/L -> (density/1000) kg/L. Mass in kg / (density/1000) = Mass in kg * 1000 / density
-      valueInLiterPerSecond = (numValue * 1000 / densityValue) / timeConversionFactors[timeUnit] // L/s
+      const massInKg =
+        numValue * massConversionFactors[specificUnit as MassUnit] // Ensure kg
+      valueInLiterPerSecond =
+        (massInKg / densityValue / timeConversionFactors[timeUnit]) * 1000 // density is g/L, need kg/L. 1000g = 1kg. So density g/L -> (density/1000) kg/L. Mass in kg / (density/1000) = Mass in kg * 1000 / density
+      valueInLiterPerSecond =
+        (numValue * 1000) / densityValue / timeConversionFactors[timeUnit] // L/s
     } else if (unitType === 'chemical') {
       // Convert moles to mass (kg), then to volume (liters)
       if (specificUnit === 'mol') {
         const massInGrams = numValue * molarMassValue // g
         const massInKg = massInGrams / 1000 // kg
-        valueInLiterPerSecond = (massInKg * 1000 / densityValue) / timeConversionFactors[timeUnit] // (kg * 1000 g/kg / density g/L) / timeUnitFactor = L/s
+        valueInLiterPerSecond =
+          (massInKg * 1000) / densityValue / timeConversionFactors[timeUnit] // (kg * 1000 g/kg / density g/L) / timeUnitFactor = L/s
       }
     }
 
@@ -224,29 +245,44 @@ export function useMassFlowConverter() {
       const timeKey = time as TimeUnit
 
       // Liters
-      const literKey = `literPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
+      const literKey =
+        `literPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
       if (literKey !== unit) {
-        newValues[literKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey]).toFixed(6)
+        newValues[literKey] = (
+          valueInLiterPerSecond * timeConversionFactors[timeKey]
+        ).toFixed(6)
       }
 
       // Cubic Meters
-      const cubicMeterKey = `cubicMeterPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
+      const cubicMeterKey =
+        `cubicMeterPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
       if (cubicMeterKey !== unit) {
-        newValues[cubicMeterKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey] / 1000).toFixed(6)
+        newValues[cubicMeterKey] = (
+          (valueInLiterPerSecond * timeConversionFactors[timeKey]) /
+          1000
+        ).toFixed(6)
       }
 
       // Kilograms
-      const kgKey = `kgPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
+      const kgKey =
+        `kgPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
       if (kgKey !== unit) {
         // L/s * timeFactor * density (g/L) -> g per time unit. Convert to kg.
-        newValues[kgKey] = (valueInLiterPerSecond * timeConversionFactors[timeKey] * densityValue / 1000).toFixed(6)
+        newValues[kgKey] = (
+          (valueInLiterPerSecond *
+            timeConversionFactors[timeKey] *
+            densityValue) /
+          1000
+        ).toFixed(6)
       }
 
       // Moles
-      const molKey = `molPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
+      const molKey =
+        `molPer${timeKey.charAt(0).toUpperCase() + timeKey.slice(1)}` as keyof FlowValues
       if (molKey !== unit) {
         // L/s * timeFactor * density (g/L) -> g per time unit. Convert to mol.
-        const massInGramsPerTimeUnit = valueInLiterPerSecond * timeConversionFactors[timeKey] * densityValue
+        const massInGramsPerTimeUnit =
+          valueInLiterPerSecond * timeConversionFactors[timeKey] * densityValue
         newValues[molKey] = (massInGramsPerTimeUnit / molarMassValue).toFixed(6)
       }
     })
@@ -255,7 +291,10 @@ export function useMassFlowConverter() {
   }
 
   // Handles input change events and triggers recalculation
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, unit: keyof FlowValues) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    unit: keyof FlowValues,
+  ) => {
     calculateAll(e.target.value, unit)
   }
 
@@ -266,29 +305,23 @@ export function useMassFlowConverter() {
     conditionType,
     temperature,
     pressure,
-    temperatureDropdownOpen,
-    pressureDropdownOpen,
     density,
     molarMass,
     values,
-    // Refs
-    temperatureDropdownRef,
-    pressureDropdownRef,
     // Handlers
     handleCalculationTypeChange,
     handleGasTypeChange,
     handleConditionTypeChange,
     handleTemperatureChange,
     handlePressureChange,
-    setTemperatureDropdownOpen,
-    setPressureDropdownOpen,
     handleChange,
+    // Validation functions
+    validateTemperature,
+    validatePressure,
     // Constants for rendering (can also be imported directly in component if preferred)
     timeUnitLabels,
     volumeUnitLabels,
     massUnitLabels,
     chemicalUnitLabels,
-    temperatureOptions,
-    pressureOptions,
   }
 }

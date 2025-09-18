@@ -21,22 +21,24 @@ function InputBox({
   min,
   max,
   step = 0.01,
-  placeholder = '',
+  placeholder = ''
 }: InputBoxProps) {
   // 禁止滾輪更改數值
   const handleWheel = (e: React.WheelEvent<HTMLInputElement>) => {
-    (e.target as HTMLInputElement).blur()
+    ;(e.target as HTMLInputElement).blur()
   }
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-blue-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-blue-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-zinc-800 rounded-lg px-3 py-2 border-2 border-zinc-700 focus-within:border-blue-500 transition">
         <input
           type="number"
           inputMode="decimal"
           className="w-full bg-transparent text-white outline-none placeholder-zinc-500"
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           min={min}
           max={max}
           step={step}
@@ -58,7 +60,9 @@ type OutputBoxProps = {
 function OutputBox({ label, value, unit }: OutputBoxProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-base font-semibold text-blue-300 mb-1">{label}</label>
+      <label className="text-base font-semibold text-blue-300 mb-1">
+        {label}
+      </label>
       <div className="flex items-center bg-gradient-to-r from-blue-900 via-zinc-900 to-blue-900 rounded-lg px-3 py-2 border-2 border-blue-700">
         <input
           type="text"
@@ -67,7 +71,9 @@ function OutputBox({ label, value, unit }: OutputBoxProps) {
           readOnly
           tabIndex={-1}
         />
-        {unit && <span className="ml-2 text-green-300 font-bold text-lg">{unit}</span>}
+        {unit && (
+          <span className="ml-2 text-green-300 font-bold text-lg">{unit}</span>
+        )}
       </div>
     </div>
   )
@@ -78,11 +84,7 @@ function OutputBox({ label, value, unit }: OutputBoxProps) {
 // HHV (高位發熱值): 1 kg H2 = 39.4 kWh, 1 Nm3 H2 = 3.54 kWh
 // 產電量(kWh) = 氫氣量 × 發熱值 × 燃料電池效率(%)
 
-function calculatePowerOutput(
-  h2Kg: number,
-  h2Nm3: number,
-  efficiency: number
-) {
+function calculatePowerOutput(h2Kg: number, h2Nm3: number, efficiency: number) {
   // LHV
   const LHV_KG = 33.33
   const LHV_NM3 = 3.0
@@ -104,7 +106,7 @@ function calculatePowerOutput(
     lhv_kwh_kg,
     hhv_kwh_kg,
     lhv_kwh_nm3,
-    hhv_kwh_nm3,
+    hhv_kwh_nm3
   }
 }
 
@@ -118,12 +120,8 @@ export default function PowerOutput() {
   const h2Nm3Num = parseFloat(h2Nm3) || 0
   const efficiencyNum = parseFloat(efficiency) || 0
 
-  const {
-    lhv_kwh_kg,
-    hhv_kwh_kg,
-    lhv_kwh_nm3,
-    hhv_kwh_nm3,
-  } = calculatePowerOutput(h2KgNum, h2Nm3Num, efficiencyNum)
+  const { lhv_kwh_kg, hhv_kwh_kg, lhv_kwh_nm3, hhv_kwh_nm3 } =
+    calculatePowerOutput(h2KgNum, h2Nm3Num, efficiencyNum)
 
   // 顯示優先: 若有 kg 輸入則顯示 kg 計算，否則顯示 Nm3 計算
   const showKg = !!h2Kg
@@ -166,8 +164,12 @@ export default function PowerOutput() {
             label="產出電量 (LHV)"
             value={
               showKg
-                ? (h2Kg ? lhv_kwh_kg.toFixed(4) : '')
-                : (h2Nm3 ? lhv_kwh_nm3.toFixed(4) : '')
+                ? h2Kg
+                  ? lhv_kwh_kg.toFixed(4)
+                  : ''
+                : h2Nm3
+                  ? lhv_kwh_nm3.toFixed(4)
+                  : ''
             }
             unit="kWh"
           />
@@ -175,8 +177,12 @@ export default function PowerOutput() {
             label="產出電量 (HHV)"
             value={
               showKg
-                ? (h2Kg ? hhv_kwh_kg.toFixed(4) : '')
-                : (h2Nm3 ? hhv_kwh_nm3.toFixed(4) : '')
+                ? h2Kg
+                  ? hhv_kwh_kg.toFixed(4)
+                  : ''
+                : h2Nm3
+                  ? hhv_kwh_nm3.toFixed(4)
+                  : ''
             }
             unit="kWh"
           />
@@ -186,11 +192,21 @@ export default function PowerOutput() {
         <table className="min-w-full bg-gradient-to-r from-zinc-800 via-blue-950 to-zinc-800 rounded-xl overflow-hidden text-white shadow-2xl border border-blue-900">
           <thead>
             <tr>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">氫氣量 (kg)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">氫氣量 (Nm³)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">效率 (%)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">LHV 產電量 (kWh)</th>
-              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">HHV 產電量 (kWh)</th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                氫氣量 (kg)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                氫氣量 (Nm³)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                效率 (%)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                LHV 產電量 (kWh)
+              </th>
+              <th className="px-6 py-4 text-left text-lg font-bold text-blue-300 bg-zinc-900">
+                HHV 產電量 (kWh)
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -206,15 +222,27 @@ export default function PowerOutput() {
                   <td className="px-6 py-3 text-lg">{kg}</td>
                   <td className="px-6 py-3 text-lg">-</td>
                   <td className="px-6 py-3 text-lg">{efficiencyNum || 0}</td>
-                  <td className="px-6 py-3 text-lg font-semibold text-green-300">{lhv.toFixed(4)}</td>
-                  <td className="px-6 py-3 text-lg font-semibold text-green-300">{hhv.toFixed(4)}</td>
+                  <td className="px-6 py-3 text-lg font-semibold text-green-300">
+                    {lhv.toFixed(4)}
+                  </td>
+                  <td className="px-6 py-3 text-lg font-semibold text-green-300">
+                    {hhv.toFixed(4)}
+                  </td>
                 </tr>
               )
             })}
             {/* 範例數據: 以 Nm3 為主 */}
             {[1, 10, 50, 100, 500].map((nm3, idx) => {
-              const lhv = calculatePowerOutput(0, nm3, efficiencyNum).lhv_kwh_nm3
-              const hhv = calculatePowerOutput(0, nm3, efficiencyNum).hhv_kwh_nm3
+              const lhv = calculatePowerOutput(
+                0,
+                nm3,
+                efficiencyNum
+              ).lhv_kwh_nm3
+              const hhv = calculatePowerOutput(
+                0,
+                nm3,
+                efficiencyNum
+              ).hhv_kwh_nm3
               return (
                 <tr
                   key={'nm3-' + nm3}
@@ -223,8 +251,12 @@ export default function PowerOutput() {
                   <td className="px-6 py-3 text-lg">-</td>
                   <td className="px-6 py-3 text-lg">{nm3}</td>
                   <td className="px-6 py-3 text-lg">{efficiencyNum || 0}</td>
-                  <td className="px-6 py-3 text-lg font-semibold text-green-300">{lhv.toFixed(4)}</td>
-                  <td className="px-6 py-3 text-lg font-semibold text-green-300">{hhv.toFixed(4)}</td>
+                  <td className="px-6 py-3 text-lg font-semibold text-green-300">
+                    {lhv.toFixed(4)}
+                  </td>
+                  <td className="px-6 py-3 text-lg font-semibold text-green-300">
+                    {hhv.toFixed(4)}
+                  </td>
                 </tr>
               )
             })}
@@ -238,7 +270,8 @@ export default function PowerOutput() {
         <br />
         <span className="inline-block mt-2">
           <b>說明：</b>
-          LHV: 1 kg H₂ = 33.33 kWh, 1 Nm³ H₂ = 3.0 kWh；HHV: 1 kg H₂ = 39.4 kWh, 1 Nm³ H₂ = 3.54 kWh
+          LHV: 1 kg H₂ = 33.33 kWh, 1 Nm³ H₂ = 3.0 kWh；HHV: 1 kg H₂ = 39.4 kWh,
+          1 Nm³ H₂ = 3.54 kWh
         </span>
       </div>
     </div>
