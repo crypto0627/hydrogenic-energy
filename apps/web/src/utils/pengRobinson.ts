@@ -93,7 +93,7 @@ export function calculateDensityPR(
   }
 
   const tolerance = 1e-10
-  const maxIterations = 50
+  const maxIterations = 10000
   let converged = false
 
   const pressureFunction = (volume: number) =>
